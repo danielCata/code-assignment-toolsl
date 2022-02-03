@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret 
+      MYSQL_DATABASE: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+
+# Use this if you want to initialize the db using a init.sql on container startup. Replace "./server/init.sql" with the path to your init.sql.
+    volumes:
+      - ./src/main/resources/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: liviapp
+    depends_on:
+      - db
+    ports:
+      - "8888:8888"
+
